@@ -145,10 +145,6 @@
 						title: {
 							display: true,
 							text: 'Ola Vs Uber'
-						},
-						legand: {
-							display: true,
-							position: 'left'
 						}
 					},
 					scales: {
@@ -161,6 +157,8 @@
 					maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
 				}
 			});
+
+			document.querySelector("#chartContainer").scrollLeft = 4500
 		}
 
 		const randomHexColor = () => '#' + Math.floor(Math.random() * 16777215).toString(16);
