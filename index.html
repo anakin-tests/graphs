@@ -43,15 +43,24 @@
 				<select class="form-select" aria-label="Select Route" id="routeSelect" required>
 					<option selected disabled value="">Select Route</option>
 					<option value="4th B Cross Rd-Truffles - Koramangala">4th B Cross Rd-Truffles - Koramangala</option>
-					<option value="Bellandur Post Office-Krantiveera Sangolli Rayanna Metro Station">Bellandur Post Office-Krantiveera Sangolli Rayanna Metro Station</option>
-					<option value="Fiestaa Resort n Events Venue-Kempegowda International Airport Bengaluru">Fiestaa Resort n Events Venue-Kempegowda International Airport Bengaluru</option>
-					<option value="Gawky Goose-The Mar Thoma Syrian Church">Gawky Goose-The Mar Thoma Syrian Church</option>
-					<option value="Kempegowda International Airport Bengaluru-BTM Layout">Kempegowda International Airport Bengaluru-BTM Layout</option>
-					<option value="Krishnarajapura-Kempegowda International Airport Bengaluru">Krishnarajapura-Kempegowda International Airport Bengaluru</option>
-					<option value="Quess Corp Limited,Sarjapur - Marathahalli Rd-Byg Brewski Brewing Company">Quess Corp Limited,Sarjapur - Marathahalli Rd-Byg Brewski Brewing Company</option>
-					<option value="Ramaiah Memorial Hospital-YESHWANTHPUR RAILWAY STATION">Ramaiah Memorial Hospital-YESHWANTHPUR RAILWAY STATION</option>
-					<option value="Royal Orchid Resort & Convention Centre-Chickpet">Royal Orchid Resort & Convention Centre-Chickpet</option>
-					<option value="Sony signal, Koramangala-Truffles, Indiranagar">Sony signal, Koramangala-Truffles, Indiranagar</option>
+					<option value="Bellandur Post Office-Krantiveera Sangolli Rayanna Metro Station">Bellandur Post
+						Office-Krantiveera Sangolli Rayanna Metro Station</option>
+					<option value="Fiestaa Resort n Events Venue-Kempegowda International Airport Bengaluru">Fiestaa
+						Resort n Events Venue-Kempegowda International Airport Bengaluru</option>
+					<option value="Gawky Goose-The Mar Thoma Syrian Church">Gawky Goose-The Mar Thoma Syrian Church
+					</option>
+					<option value="Kempegowda International Airport Bengaluru-BTM Layout">Kempegowda International
+						Airport Bengaluru-BTM Layout</option>
+					<option value="Krishnarajapura-Kempegowda International Airport Bengaluru">
+						Krishnarajapura-Kempegowda International Airport Bengaluru</option>
+					<option value="Quess Corp Limited,Sarjapur - Marathahalli Rd-Byg Brewski Brewing Company">Quess Corp
+						Limited,Sarjapur - Marathahalli Rd-Byg Brewski Brewing Company</option>
+					<option value="Ramaiah Memorial Hospital-YESHWANTHPUR RAILWAY STATION">Ramaiah Memorial
+						Hospital-YESHWANTHPUR RAILWAY STATION</option>
+					<option value="Royal Orchid Resort & Convention Centre-Chickpet">Royal Orchid Resort & Convention
+						Centre-Chickpet</option>
+					<option value="Sony signal, Koramangala-Truffles, Indiranagar">Sony signal, Koramangala-Truffles,
+						Indiranagar</option>
 					<option value="Zolo Amber-Vars Splendid">Zolo Amber-Vars Splendid</option>
 				</select>
 			</div>
@@ -71,8 +80,9 @@
 			<button type="submit" class="btn btn-primary">Submit</button>
 		</form>
 
-		<div class="displayNone" id="chartContainer" style="width: 100%; overflow-x: auto; overflow-y: hidden; padding-top: 20px;">
-			<div style="width: 3000px; height: 500px">
+		<div class="displayNone" id="chartContainer"
+			style="width: 100%; overflow-x: auto; overflow-y: hidden; padding-top: 20px;">
+			<div style="width: 8000px; height: 500px">
 				<canvas id="myChart" height="500" width="0"></canvas>
 			</div>
 		</div>
@@ -137,6 +147,13 @@
 							text: 'Ola Vs Uber'
 						}
 					},
+					scales: {
+						yAxes: [{
+							ticks: {
+								beginAtZero: true
+							}
+						}]
+					}
 					maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
 				}
 			});
@@ -157,9 +174,9 @@
 		}
 
 		const handleFormSubmissionAPI = async (route, date) => {
-			
+
 			let listOfRidesAndData = {};
-			
+
 			await Promise.all([
 				axios.get(`data/ola/${date}/${route}.json`)
 					.then(function (response) {
@@ -213,7 +230,7 @@
 
 		document.getElementById('form').onsubmit = (context) => {
 			context.defaultPrevented = true;
-			
+
 			const route = document.getElementById('routeSelect').value;
 			const date = document.getElementById('DateSelect').value;
 
