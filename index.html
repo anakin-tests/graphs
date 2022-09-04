@@ -129,6 +129,18 @@
 			});
 		}
 
+		const groupBy = (xs, key) => {
+			return xs.reduce((rv, x) => {
+				(rv[x[key]] = rv[x[key]] || []).push(x);
+				return rv;
+			}, {});
+		};
+
+		const handleData = (data) => {
+			const groupByTypeOfRide = groupBy(data, 'TypeOfRide');
+			console.log(groupByTypeOfRide);
+		}
+
 		document.getElementById('form').onsubmit = (context) => {
 			context.defaultPrevented = true;
 			
@@ -144,16 +156,12 @@
 
 			axios.get(`data/ola/${date}/${route}.json`)
 				.then(function (response) {
-					// handle success
-					console.log("Ola");
-					console.log(response.data);
+					handleData(response.data);
 				})
 
 			axios.get(`data/uber/${date}/${route}.json`)
 				.then(function (response) {
-					// handle success
-					console.log("Ola");
-					console.log(response.data);
+					handleData(response.data);
 				})
 
 			console.log(route, date);
