@@ -94,8 +94,8 @@
 
 		for (let i = 0; i < 24; i++) {
 			for (let j = 0; j < 60; j++) {
-				labels.push(`${i}:${j}`);
-				labelsIndexObj[`${i}:${j}`] = labels.length - 1;
+				labels.push(`${('0' + i).slice(-2)}:${('0' + j).slice(-2)}`);
+				labelsIndexObj[`${('0' + i).slice(-2)}:${('0' + j).slice(-2)}`] = labels.length - 1;
 				defaultData.push(0);
 			}
 		}
