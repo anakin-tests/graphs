@@ -5,12 +5,15 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 	<title>Graph</title>
 
 	<style>
 		canvas {
 			height: 90vh;
 		}
+
 		.LoadingScreen {
 			position: absolute;
 			top: 0;
@@ -23,19 +26,59 @@
 			align-items: center;
 			z-index: 100;
 		}
+
+		.displayNone {
+			display: none !important;
+		}
 	</style>
 
 </head>
 
 <body>
 
-	<div style="width: 100%; overflow-x: auto; overflow-y: hidden">
-		<div style="width: 3000px; height: 500px">
-			<canvas id="myChart" height="500" width="0"></canvas>
+	<div class="container-fluid">
+		<form id="form" action="#">
+			<div class="mb-3">
+				<label for="routeSelect" class="form-label">Select Route</label>
+				<select class="form-select" aria-label="Select Route" id="routeSelect" required>
+					<option selected disabled value="">Select Route</option>
+					<option value="4th B Cross Rd-Truffles - Koramangala">4th B Cross Rd-Truffles - Koramangala</option>
+					<option value="Bellandur Post Office-Krantiveera Sangolli Rayanna Metro Station">Bellandur Post Office-Krantiveera Sangolli Rayanna Metro Station</option>
+					<option value="Fiestaa Resort n Events Venue-Kempegowda International Airport Bengaluru">Fiestaa Resort n Events Venue-Kempegowda International Airport Bengaluru</option>
+					<option value="Gawky Goose-The Mar Thoma Syrian Church">Gawky Goose-The Mar Thoma Syrian Church</option>
+					<option value="Kempegowda International Airport Bengaluru-BTM Layout">Kempegowda International Airport Bengaluru-BTM Layout</option>
+					<option value="Krishnarajapura-Kempegowda International Airport Bengaluru">Krishnarajapura-Kempegowda International Airport Bengaluru</option>
+					<option value="Quess Corp Limited,Sarjapur - Marathahalli Rd-Byg Brewski Brewing Company">Quess Corp Limited,Sarjapur - Marathahalli Rd-Byg Brewski Brewing Company</option>
+					<option value="Ramaiah Memorial Hospital-YESHWANTHPUR RAILWAY STATION">Ramaiah Memorial Hospital-YESHWANTHPUR RAILWAY STATION</option>
+					<option value="Royal Orchid Resort & Convention Centre-Chickpet">Royal Orchid Resort & Convention Centre-Chickpet</option>
+					<option value="Sony signal, Koramangala-Truffles, Indiranagar">Sony signal, Koramangala-Truffles, Indiranagar</option>
+					<option value="Zolo Amber-Vars Splendid">Zolo Amber-Vars Splendid</option>
+				</select>
+			</div>
+			<div class="mb-3">
+				<label for="DateSelect" class="form-label">Select Date</label>
+				<select class="form-select" aria-label="Select Date" id="DateSelect" required>
+					<option selected disabled value="">Select Date</option>
+					<option value="2022-08-30">2022-08-30</option>
+					<option value="2022-08-31">2022-08-31</option>
+					<option value="2022-09-01">2022-09-01</option>
+					<option value="2022-09-02">2022-09-02</option>
+					<option value="2022-09-03">2022-09-03</option>
+					<option value="2022-09-04">2022-09-04</option>
+					<option value="2022-09-05">2022-09-05</option>
+				</select>
+			</div>
+			<button type="submit" class="btn btn-primary">Submit</button>
+		</form>
+
+		<div class="displayNone" style="width: 100%; overflow-x: auto; overflow-y: hidden">
+			<div style="width: 3000px; height: 500px">
+				<canvas id="myChart" height="500" width="0"></canvas>
+			</div>
 		</div>
 	</div>
 
-	<div class="LoadingScreen">
+	<div class="LoadingScreen displayNone">
 		<h1>Loading...</h1>
 	</div>
 
@@ -45,8 +88,15 @@
 	<script>
 		const ctx = document.getElementById("myChart").getContext('2d');
 
+		let currentChart = null;
+
 		function generate_graph(labels, datasets) {
-			new Chart(ctx, {
+			
+			if (currentChart) {
+				currentChart.destroy();
+			}
+
+			currentChart = new Chart(ctx, {
 				type: 'line',
 				data: {
 					labels: labels,
@@ -79,9 +129,37 @@
 			});
 		}
 
-		document.body.onload(function() {
-			console.log("Loading");
-		});
+		document.getElementById('form').onsubmit = (context) => {
+			context.defaultPrevented = true;
+			
+			const route = document.getElementById('routeSelect').value;
+			const date = document.getElementById('DateSelect').value;
+
+			if (route == null || date == null) {
+				alert('Please select a route and date');
+				return;
+			}
+
+			document.querySelector('.LoadingScreen').classList.remove('displayNone');
+
+			axios.get(`data/ola/${date}/${route}.json`)
+				.then(function (response) {
+					// handle success
+					console.log("Ola");
+					console.log(response.data);
+				})
+
+			axios.get(`data/uber/${date}/${route}.json`)
+				.then(function (response) {
+					// handle success
+					console.log("Ola");
+					console.log(response.data);
+				})
+
+			console.log(route, date);
+
+			return false;
+		}
 	</script>
 </body>
 
