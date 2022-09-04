@@ -91,7 +91,7 @@
 		let currentChart = null;
 
 		function generate_graph(labels, datasets) {
-			
+
 			if (currentChart) {
 				currentChart.destroy();
 			}
@@ -129,6 +129,8 @@
 			});
 		}
 
+		const randomHexColor = () => '#' + Math.floor(Math.random() * 16777215).toString(16);
+
 		const groupBy = (xs, key) => {
 			return xs.reduce((rv, x) => {
 				(rv[x[key]] = rv[x[key]] || []).push(x);
@@ -139,6 +141,51 @@
 		const handleData = (data) => {
 			const groupByTypeOfRide = groupBy(data, 'TypeOfRide');
 			console.log(groupByTypeOfRide);
+		}
+
+		const handleFormSubmissionAPI = async (route, date) => {
+			
+			let listOfRidesAndData = {};
+			
+			await Promise.all([
+				axios.get(`data/ola/${date}/${route}.json`)
+					.then(function (response) {
+						listOfRidesAndData = {
+							...listOfRidesAndData,
+							...groupBy(response.data, 'TypeOfRide')
+						}
+					}),
+				axios.get(`data/uber/${date}/${route}.json`)
+					.then(function (response) {
+						listOfRidesAndData = {
+							...listOfRidesAndData,
+							...groupBy(response.data, 'TypeOfRide')
+						}
+					})
+			])
+
+			let datasets = [];
+			let labels = [];
+
+			Object.keys(listOfRidesAndData).forEach((key) => {
+				const data = listOfRidesAndData[key];
+				const label = key;
+				const color = randomHexColor();
+
+				datasets.push({
+					label: label, // Name the series
+					data: data.map((item) => item.Price), // Specify the data values array
+					fill: false,
+					borderColor: color, // Add custom color border (Line)
+					backgroundColor: color, // Add custom color background (Points and Fill)
+					borderWidth: 1 // Specify bar border width
+				});
+
+				labels = data.map((item) => item.Time);
+			})
+
+			generate_graph(labels, datasets);
+			document.querySelector('.LoadingScreen').classList.add('displayNone');
 		}
 
 		document.getElementById('form').onsubmit = (context) => {
@@ -154,17 +201,7 @@
 
 			document.querySelector('.LoadingScreen').classList.remove('displayNone');
 
-			axios.get(`data/ola/${date}/${route}.json`)
-				.then(function (response) {
-					handleData(response.data);
-				})
-
-			axios.get(`data/uber/${date}/${route}.json`)
-				.then(function (response) {
-					handleData(response.data);
-				})
-
-			console.log(route, date);
+			generate_empty_graph();
 
 			return false;
 		}
