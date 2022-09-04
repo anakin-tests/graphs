@@ -71,7 +71,7 @@
 			<button type="submit" class="btn btn-primary">Submit</button>
 		</form>
 
-		<div class="displayNone" style="width: 100%; overflow-x: auto; overflow-y: hidden">
+		<div class="displayNone" id="chartContainer" style="width: 100%; overflow-x: auto; overflow-y: hidden">
 			<div style="width: 3000px; height: 500px">
 				<canvas id="myChart" height="500" width="0"></canvas>
 			</div>
@@ -88,13 +88,26 @@
 	<script>
 		const ctx = document.getElementById("myChart").getContext('2d');
 
-		let currentChart = null;
+		const labels = [];
+		const labelsIndexObj = {};
+		const defaultData = [];
 
+		for (let i = 0; i < 24; i++) {
+			for (let j = 0; j < 60; j += 15) {
+				labels.push(`${i}:${j}`);
+				labelsIndexObj[`${i}:${j}`] = labels.length - 1;
+				defaultData.push(0);
+			}
+		}
+
+		let currentChart = null;
 		function generate_graph(labels, datasets) {
 
 			if (currentChart) {
 				currentChart.destroy();
 			}
+
+			document.getElementById("chartContainer").classList.remove("displayNone");
 
 			currentChart = new Chart(ctx, {
 				type: 'line',
@@ -165,23 +178,29 @@
 			])
 
 			let datasets = [];
-			let labels = [];
 
 			Object.keys(listOfRidesAndData).forEach((key) => {
 				const data = listOfRidesAndData[key];
-				const label = key;
+				const dataSetLabel = key;
 				const color = randomHexColor();
 
+				let dataForDataSet = [...defaultData];
+
+				for (let i = 0; i < data.length; i++) {
+					const time = data[i].Time;
+					const index = labelsIndexObj[time];
+					dataForDataSet[index] = data[i].Fare;
+				}
+
 				datasets.push({
-					label: label, // Name the series
-					data: data.map((item) => item.Price), // Specify the data values array
+					label: dataSetLabel, // Name the series
+					data: dataForDataSet, // Specify the data values array
 					fill: false,
+					hidden: true,
 					borderColor: color, // Add custom color border (Line)
 					backgroundColor: color, // Add custom color background (Points and Fill)
 					borderWidth: 1 // Specify bar border width
 				});
-
-				labels = data.map((item) => item.Time);
 			})
 
 			generate_graph(labels, datasets);
