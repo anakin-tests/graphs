@@ -82,7 +82,7 @@
 
 		<div class="displayNone" id="chartContainer"
 			style="width: 100%; overflow-x: auto; overflow-y: hidden; padding-top: 20px;">
-			<div style="width: 8000px; height: 500px">
+			<div style="width: 9000px; height: 500px">
 				<canvas id="myChart" height="500" width="0"></canvas>
 			</div>
 		</div>
@@ -145,6 +145,10 @@
 						title: {
 							display: true,
 							text: 'Ola Vs Uber'
+						},
+						legand: {
+							display: true,
+							position: 'left'
 						}
 					},
 					scales: {
@@ -153,7 +157,7 @@
 								beginAtZero: true
 							}
 						}]
-					}
+					},
 					maintainAspectRatio: false, // Add to prevent default behaviour of full-width/height 
 				}
 			});
