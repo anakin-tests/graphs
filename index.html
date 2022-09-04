@@ -167,6 +167,8 @@
 							...listOfRidesAndData,
 							...groupBy(response.data, 'TypeOfRide')
 						}
+					}).catch(error => {
+						console.log(error);
 					}),
 				axios.get(`data/uber/${date}/${route}.json`)
 					.then(function (response) {
@@ -174,6 +176,8 @@
 							...listOfRidesAndData,
 							...groupBy(response.data, 'TypeOfRide')
 						}
+					}).catch(error => {
+						console.log(error);
 					})
 			])
 
